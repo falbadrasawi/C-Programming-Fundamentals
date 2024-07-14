@@ -1,22 +1,23 @@
+#include <stdio.h> //Includes the standard input/output library
+#include <stdlib.h> //Includes the standard library for memory allocation
 
-#include <stdio.h>
-#include <stdlib.h>
-
+//Define the structure for an integer node
 typedef struct IntNode_struct {
-   int dataVal;
-   struct IntNode_struct* nextNodePtr;
+   int dataVal; //Integer data value of the node
+   struct IntNode_struct* nextNodePtr; //Pointer to the next node in the list
 } IntNode;
 
-// Constructor
+// Constructor (Function to create a node)
 void IntNode_Create
 (IntNode* thisNode, int dataInit, IntNode* nextLoc) {
-   thisNode->dataVal = dataInit;
-   thisNode->nextNodePtr = nextLoc;
+   thisNode->dataVal = dataInit; //Initialize the node's data value
+   thisNode->nextNodePtr = nextLoc; // Set the next node pointer
 }
 
+//Function to insert a new node after the current node
 /* Insert newNode after node.
- Before: thisNode -- next
- After:  thisNode -- newNode -- next
+ Before: thisNode --points to  next
+ After:  thisNode --points to  newNode which points to -- next
  */
 void IntNode_InsertAfter
 (IntNode* thisNode, IntNode* newNode) {
