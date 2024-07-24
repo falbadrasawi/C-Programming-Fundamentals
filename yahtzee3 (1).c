@@ -17,18 +17,6 @@
 #define DICE 5
 #define FALSE 0
 #define TRUE 1
-#define CATEGORY 13 //2a 
-#define COLS 2      //2b
-
-//3a-b
-//Declare the structure
-struct Player 
-{
-    int playerNum;
-    char playerName[NAME];
-    int scoreCard[CATEGORY][COLS];
-};
-
 
 // we will use the enums as indexes to the array that will store the scores
 enum scores{one, two, three, four, five, six,
@@ -48,12 +36,6 @@ int selectDice(int dice[DICE], int keep[DICE]);
 void displayRoll(int dice[DICE]);
 void trimTrailing(char * str);
 int isValid(char data[NAME]);
-//Write the function declaration or prototype for functions
-//4a-d
-void initScorecard();
-int selectCategory();
-void updateScores();
-void displayScoreCard();
 
 // main function
 int main()
@@ -93,11 +75,8 @@ void welcomeScreen ()
 void playGame()
 {
     // arrays are inherently pointers to index 0 of the array
-
-    //5a Change the data type of variable playerOne from a character array to struct Player
-    struct Player playerOne; //5.a
-    struct Player playerTwo; //5.b
-    
+    char playerOne[NAME];
+    char playerTwo[NAME];
     int currentPlayer = ONE;
     int loop = ZERO;
     int dice[DICE];
@@ -105,78 +84,61 @@ void playGame()
 
     // prompt player one for their name and store in array playerOne
     printf("\nPlayer One, enter your name\n");
-    scanf("%s", playerOne.playerName); //5.c.i
-    playerOne.playerNum = ONE; //5.c.ii
-    initScorecard(playerOne.scoreCard); //5.c.iii
+    scanf("%s", playerOne);
 
     // prompt player two for their name and store in array playerTwo
     printf("Player Two, enter your name\n");
-    scanf("%s", playerTwo.playerName); //5.c.i
-    
-    playerTwo.playerNum = TWO; //5.c.ii
-    initScorecard(playerTwo.scoreCard); //5.c.iii
+    scanf("%s", playerTwo);
 
-    printf("%s and %s let's play Yahtzee!\n", playerOne.playerName, playerTwo.playerName); //5.c
+    printf("%s and %s let's play Yahtzee!\n", playerOne, playerTwo);
 
     // iterate two times
     while(loop < TWO)
     {
-        if(currentPlayer == playerOne.playerNum) //5.d.i
+        if(currentPlayer == ONE)
         {
             // prompt player it is their turn
-            printf("%s it is your turn\n", playerOne.playerName); //5.d.ii
+            printf("%s it is your turn\n", playerOne);
 
             // call function displayEmptyCard
-            //displayEmptyCard(); //5.d.ii
-            displayScoreCard(playerOne.scoreCard); //5.d.iv
+            displayEmptyCard();
 
-            //call function displayDice
-            //displayRandomDice();
+            // call function displayDice
+//            displayRandomDice();
 
             // call function initDice for arrays dice and keep
             initDice(dice);
             initDice(keep);
 
-            // flush the standard input
+            // flush the standard in
             fflush(stdin);
 
             // call function rollDice
             rollDice(dice, keep);
 
-            int category = selectCategory(); //5.d.v.1
-            updateScores(dice, playerOne.scoreCard, category); //5.d.v.2
-            displayScoreCard(playerOne.scoreCard); //5.d.v.3
             // switch players
-            currentPlayer = playerTwo.playerNum; //5.d.vi
+            currentPlayer = TWO;
         }
-        else if(currentPlayer == playerTwo.playerNum) //5.d.i
+        else if(currentPlayer == TWO)
         {
             // prompt player it is their turn
-            printf("\n%s it is your turn\n", playerTwo.playerName); //5.d.ii
+            printf("\n%s it is your turn\n", playerTwo);
 
             // call function displayEmptyCard
-            //displayEmptyCard(); //5.d.iii
-            displayScoreCard(playerTwo.scoreCard); //5.d.iv
+            displayEmptyCard();
 
             // call function displayDice
-           //displayRandomDice();
-
+//            displayRandomDice();
 
             // call function initDice for arrays dice and keep
             initDice(dice);
             initDice(keep);
 
-            fflush(stdin); 
-
             // call function rollDice
             rollDice(dice, keep);
 
-            int category = selectCategory(); //5.d.v.1
-            updateScores(dice, playerTwo.scoreCard, category); //5.d.v.2
-            displayScoreCard(playerTwo.scoreCard); //5.d.v.3
-
             // switch players
-            currentPlayer = playerOne.playerNum; //5.d.vi
+            currentPlayer = ONE;
         }
 
         // increment the loop control variable
@@ -254,6 +216,7 @@ int rollDie()
 {
     // declare and initialize variable
     int dieValue = rand() % SIX + ONE;
+
     // return the value
     return dieValue;
 }
@@ -293,7 +256,6 @@ void rollDice(int dice[DICE], int keep[DICE])
         // prompt the user to select the dice to keep
         // if the selected dice are not valid, player needs to be prompted again
         // without increasing the roll number
-
         if(selectDice(dice, keep) == FALSE)
         {
             printf("Selected dice invalid, try again\n");
@@ -451,123 +413,4 @@ void trimTrailing(char * str)
 
     // Mark next character to last non-white space character as NULL
     str[index + 1] = '\0';
-}
-
-//6a-c
-void initScorecard(int card[CATEGORY][COLS]) { 
-    for (int row = 0; row < CATEGORY; ++row) {
-        for (int column = 0; column < COLS; ++column) {
-            if (column == ZERO) {
-                card[row][column] = row;
-            }
-            else {
-                card[row][column] = ZERO;
-            }
-        }
-    }
-    printf("This is the end of initScoreCard");
-}
-
-//7.a-f
-int selectCategory() { //7.a-b
-    int select = ZERO; //7.c
-    int valid = FALSE; //7.d
-
-    while (valid == FALSE) {
-        printf("Select category for dice\n\n"); //7.e.a
-        printf("0. Ones\n");
-        printf("1. Twos\n");
-        printf("2. Threes\n");
-        printf("3. Fours\n");
-        printf("4. Fives\n");
-        printf("5. Sixes\n");
-        printf("6. Three of a Kind\n");
-        printf("7. Four of a Kind\n");
-        printf("8. Full House\n");
-        printf("9. Small Straight\n");
-        printf("10. Large Straight\n");
-        printf("11. Yahtzee\n");
-        printf("12. Chance\n");
-
-        scanf("%d", &select); //7.e.b
-        fflush(stdin); //7.e.c
-
-        if ((select >= 0) && (select <= 12)) { //7.d
-            valid = TRUE; //7.d.i
-        }
-        else { //7.e
-            printf("Your selection was invlaid\n"); //7.e.i
-            valid = FALSE; //7.e.ii
-        }
-    }
-    return select; //7.f
-}
-
-void updateScores(int dice[DICE], int scoreCard[CATEGORY][COLS], int category) { //8.a-b
-        if (category == one) {
-            printf("Scoring ONES...\n");
-        }
-        else if (category == two) {
-            printf("Scoring TWOS...\n");
-        }
-        else if (category == three) {
-            printf("Scoring THREES...\n");
-        }
-        else if (category == four) {
-            printf("Scoring FOURS...\n");
-        }
-        else if (category == five) {
-            printf("Scoring FIVES...\n");
-        }
-        else if (category == six) {
-            printf("Scoring SIXES...\n");
-        }
-        else if (category == threekind) {
-            printf("Scoring THREE OF A KIND...\n");
-        }
-        else if (category == fourkind) {
-            printf("Scoring FOUR OF A KIND\n");
-        }
-        else if (category == fullhouse) {
-            printf("Scoring FULL HOUSE...\n");
-        }
-        else if (category == smstr) {
-            printf("Scoring SMALL STRAIGHT...\n");
-        }
-        else if (category == lgstr) {
-            printf("Scoring LARGE STRAIGHT...\n");
-        }
-        else if (category == yahtzee) {
-            printf("Scoring YAHTZEE...\n");
-        }
-        else if (category == chance) {
-            printf("Scoring CHANCE...\n");
-        }
-    
-}
-
-void displayScoreCard(int scores[CATEGORY][COLS]) { //9.a-b
-        printf("+----------------------------------+\n");
-    printf("| UPPER SECTION  |  LOWER SECTION  |\n");
-    printf("|----------------------------------|\n");
-    printf("|----------------------------------|\n");
-    printf("| Aces   |  %d   | 3 Kind  |  %d   |\n", scores[one][ONE], scores[threekind][ONE]);
-    printf("|----------------------------------|\n");
-    printf("| Twos   |  %d   | 4 Kind  |  %d   |\n", scores[two][ONE], scores[fourkind][ONE]);
-    printf("|----------------------------------|\n");
-    printf("| Threes |  %d   | Full Hs |  %d   |\n", scores[three][ONE], scores[fullhouse][ONE]);
-    printf("|----------------------------------|\n");
-    printf("| Fours  |  %d   | Sm Str  |  %d   |\n", scores[four][ONE], scores[smstr][ONE]);
-    printf("|----------------------------------|\n");
-    printf("| Fives  |  %d   | Lg Str  |  %d   |\n", scores[five][ONE], scores[lgstr][ONE]);
-    printf("|----------------------------------|\n");
-    printf("| Sixes  |  %d   | Yahtzee |  %d   |\n", scores[six][ONE], scores[yahtzee][ONE]);
-    printf("|----------------------------------|\n");
-    printf("| Total  |  %d   | Chance  |  %d   |\n", ZERO, scores[chance][ONE]);
-    printf("|----------------------------------|\n");
-    printf("| Bonus  |  %d   | Total   |  %d   |\n", ZERO, ZERO);
-    printf("|----------------------------------|\n");
-    printf("|----------------------------------|\n");
-    printf("|             Game Total   |  %d   |\n", ZERO);
-    printf("+----------------------------------+\n");
 }
