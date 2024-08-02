@@ -676,26 +676,62 @@ void scoreFullHouse(int dice[DICE], int scoreCard[CATEGORY][COLS], int category)
     int pair = 0; //9.d
     int counts[6] = {0}; //9.e
 
-    for (int i = 0; i < DICE; ++i) 
+    for (int i = 0; i < DICE; ++i) //9.f 
     {
         counts[dice[i] - 1]++;
     }
 
-    for (int i = 0; i < 6; ++i) 
+    for (int i = 0; i < 6; ++i) //9.g
     {
-        if (counts[i] == 3) 
+        if (counts[i] == 3) //9.g.a
         {
             triple = TRUE;
         }
-        if (counts[i] == 2) {
+        if (counts[i] == 2) //9.g.b
+        {
             pair = TRUE;
         }
     }
 
-    if (triple && pair) 
+    if (triple && pair) //9.h
     {
         scoreCard[category][ONE] = FULLHOUSE;
     }
-
 }
 
+/*STEP 10*/
+void scoreStraight(int dice[DICE], int scoreCard[CATEGORY][COLS], int category)
+{
+    qsort(dice,DICE,sizeof(int),compare);
+    int unique[5];
+    int uniqueSize = 0;
+
+    for (int i = 0; i < DICE; ++i)
+    {
+        if ((uniqueSize == 0) || (unique[uniqueSize - 1] != dice[i]))
+        {
+            unique[uniqueSize++] = dice[i];
+        }
+    }
+
+    if (category == smstr)
+    {
+        for (int i = 0; i <= uniqueSize - 4; ++i) //10.g.a CHECK THE VIDEO FOR CLARIFICATION
+        {
+            if ((unique[i] == 1 && unique[i+1] == 2 && unique[i+2] == 3 && unique[i+3] == 4) 
+            || (unique[i] == 2 && unique[i+1] == 3 && unique[i+2] == 4 && unique[i+3] == 5) 
+            || (unique[i] == 3 && unique[i+1] == 4 && unique[i+2] == 5 && unique[i+3] == 6)) 
+                {
+                    scoreCard[category][ONE] = SMALLSTR;
+                }
+        }
+    }
+
+    if (category == lgstr) {
+        if ((uniqueSize >= 5 && unique[0] == 1 && unique[1] == 2 && unique[2] == 3 && unique[3] == 4 && unique[4] == 5) 
+        || (uniqueSize >= 5 && unique[0] == 2 && unique[1] == 3 && unique[2] == 4 && unique[3] == 5 && unique[4] == 6)) 
+        {
+            scoreCard[category][1] = LARGESTR; 
+        }
+    }
+}
