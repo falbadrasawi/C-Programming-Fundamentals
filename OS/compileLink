@@ -1,0 +1,2 @@
+i686-elf-gcc -ffreestanding -c kernel.c -o kernel.o
+i686-elf-ld -o kernel.bin -T link.ld kernel.o
