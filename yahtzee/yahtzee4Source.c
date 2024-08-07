@@ -61,11 +61,11 @@ void scoreFullHouse(); //3.c
 void scoreStraight(); //3.d
 void scoreYahtzee(); //3.e
 void scoreChance(); //3.f
-void compare(); //3.g
-void upperTotal(); //3.h
-void upperBonus(); //3.i
-void lowerTotal(); //3.j
-void grandTotal(); //3.k
+int compare(); //3.g
+int upperTotal(); //3.h
+int upperBonus(); //3.i
+int lowerTotal(); //3.j
+int grandTotal(); //3.k
 
 // main function
 int main()
@@ -731,7 +731,85 @@ void scoreStraight(int dice[DICE], int scoreCard[CATEGORY][COLS], int category)
         if ((uniqueSize >= 5 && unique[0] == 1 && unique[1] == 2 && unique[2] == 3 && unique[3] == 4 && unique[4] == 5) 
         || (uniqueSize >= 5 && unique[0] == 2 && unique[1] == 3 && unique[2] == 4 && unique[3] == 5 && unique[4] == 6)) 
         {
-            scoreCard[category][1] = LARGESTR; 
+            scoreCard[category][ONE] = LARGESTR; 
         }
     }
+}
+
+/*STEP 11*/
+void scoreYahtzee(int dice[DICE], int scoreCard[CATEGORY][COLS], int category)
+{
+    int isYahtzee = TRUE;
+
+    for (int i = 1; i < DICE; ++i) 
+    {
+        if (dice[i] != dice[0]) 
+        {
+            isYahtzee = FALSE;
+        }
+    }
+
+    if (isYahtzee == TRUE)
+    {
+        scoreCard[category][ONE] = YAHTZEE;
+    }
+}
+
+void scoreChance(int dice[DICE], int scoreCard[CATEGORY][COLS], int category)
+{
+    int score = 0;
+
+    for (int i = 0; i < DICE; ++i)
+    {
+        score += dice[i];
+    }
+
+    scoreCard[category][ONE] = score;
+}
+
+int upperTotal(int scoreCard[CATEGORY][COLS])
+{
+    int total = 0;
+    for (int i = one; i <= six; ++i)
+    {
+        total += scoreCard[i][ONE];
+    }
+
+    return total;
+}
+
+int lowerTotal(int scoreCard[CATEGORY][COLS])
+{
+    int total = 0;
+
+    for (int i = threekind; i <= chance; ++i)
+    {
+       total += scoreCard[i][ONE]; 
+    }
+
+    return total;
+}
+
+int upperBonus(int scoreCard[CATEGORY][COLS])
+{
+    int total = 0;
+
+    if (upperTotal(scoreCard) >= ISBONUS)
+    {
+        total = BONUS;
+    }
+    
+    return total;
+}
+
+int grandTotal(int scoreCard[CATEGORY][COLS])
+{
+    int total = upperTotal(scoreCard) + lowerTotal(scoreCard) + upperBonus(scoreCard);
+
+    return total;
+}
+
+int compare(const void *a, const void *b)
+{
+    return (*(int *)a - *(int *)b);
 }
